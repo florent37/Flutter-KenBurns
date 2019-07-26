@@ -3,12 +3,12 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
-class KenburnsGeneratorConfig {
+class KenBurnsGeneratorConfig {
   double newScale;
   Offset newTranslation;
   Duration newDuration;
 
-  KenburnsGeneratorConfig({
+  KenBurnsGeneratorConfig({
     @required this.newScale,
     @required this.newTranslation,
     @required this.newDuration,
@@ -49,7 +49,7 @@ class KenburnsGenerator {
     return Offset(x, y);
   }
 
-  KenburnsGeneratorConfig generateNextConfig({
+  KenBurnsGeneratorConfig generateNextConfig({
     double width,
     double height,
     double maxScale,
@@ -86,7 +86,7 @@ class KenburnsGenerator {
       );
     } while ((nextTranslation.dy - lastTranslation.dy).abs() < height * 0.1 && (nextTranslation.dx - lastTranslation.dx).abs() < width * 0.1);
 
-    return KenburnsGeneratorConfig(
+    return KenBurnsGeneratorConfig(
       newDuration: nextDuration,
       newTranslation: nextTranslation,
       newScale: nextScale,

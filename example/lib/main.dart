@@ -20,18 +20,23 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              height: 300,
-              child: Kenburns(
-                child: Image.network("https://images.pexels.com/photos/556416/pexels-photo-556416.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260", fit: BoxFit.cover,),
+        body: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 300,
+                child: KenBurns(
+                  minAnimationDuration: Duration(milliseconds: 1000),
+                  maxAnimationDuration: Duration(milliseconds: 3000),
+                    child: Image.network("https://www.photo-paysage.com/?file=pic_download_link/picture&pid=3100", fit: BoxFit.cover,),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
