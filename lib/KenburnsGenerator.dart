@@ -20,12 +20,12 @@ class KenburnsGenerator {
 
   KenburnsGenerator();
 
-  /**
-   * Generates a positive random integer distributed on the range
-   */
-  double _randomValue(double min, double max) => min + _random.nextDouble() * (max - min);
+  /// Generates a positive random integer distributed on the range
+  double _randomValue(double min, double max) =>
+      min + _random.nextDouble() * (max - min);
 
-  double generateNextScale({double lastScale, double maxScale, bool scaleDown}) {
+  double generateNextScale(
+      {double lastScale, double maxScale, bool scaleDown}) {
     final double minScale = 1.0;
     if (scaleDown && minScale < lastScale) {
       return _randomValue(minScale, lastScale);
@@ -34,11 +34,15 @@ class KenburnsGenerator {
     }
   }
 
-  Duration generateNextDuration({double minDurationMillis, double maxDurationMillis}) {
-    return Duration(milliseconds: _randomValue(minDurationMillis, maxDurationMillis).floor());
+  Duration generateNextDuration(
+      {double minDurationMillis, double maxDurationMillis}) {
+    return Duration(
+        milliseconds:
+            _randomValue(minDurationMillis, maxDurationMillis).floor());
   }
 
-  Offset generateNextTranslation({double width, double height, Size nextSize, double nextScale}) {
+  Offset generateNextTranslation(
+      {double width, double height, Size nextSize, double nextScale}) {
     double minX = -1 * (nextSize.width / 2 - width) / nextScale;
     double maxX = 1;
     double minY = -1 * (nextSize.height / 2 - height) / nextScale;
@@ -59,7 +63,6 @@ class KenburnsGenerator {
     double maxDurationMillis,
     Offset lastTranslation,
   }) {
-
     Duration nextDuration;
     double nextScale;
     Offset nextTranslation;
@@ -84,7 +87,8 @@ class KenburnsGenerator {
         nextScale: nextScale,
         nextSize: nextSize,
       );
-    } while ((nextTranslation.dy - lastTranslation.dy).abs() < height * 0.1 && (nextTranslation.dx - lastTranslation.dx).abs() < width * 0.1);
+    } while ((nextTranslation.dy - lastTranslation.dy).abs() < height * 0.1 &&
+        (nextTranslation.dx - lastTranslation.dx).abs() < width * 0.1);
 
     return KenBurnsGeneratorConfig(
       newDuration: nextDuration,

@@ -30,8 +30,6 @@ class _MyAppState extends State<MyApp> {
               Container(
                 height: 300,
                 child: KenBurns(
-                  minAnimationDuration: Duration(milliseconds: 1000),
-                  maxAnimationDuration: Duration(milliseconds: 3000),
                     child: Image.network("https://www.photo-paysage.com/?file=pic_download_link/picture&pid=3100", fit: BoxFit.cover,),
                 ),
               ),

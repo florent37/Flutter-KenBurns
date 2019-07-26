@@ -19,8 +19,10 @@ class KenBurns extends StatefulWidget {
     this.maxScale = 8,
   })  : this.childrenFadeDuration = null,
         this.children = null,
-        assert(minAnimationDuration != null && minAnimationDuration.inMilliseconds > 0),
-        assert(maxAnimationDuration != null && maxAnimationDuration.inMilliseconds > 0),
+        assert(minAnimationDuration != null &&
+            minAnimationDuration.inMilliseconds > 0),
+        assert(maxAnimationDuration != null &&
+            maxAnimationDuration.inMilliseconds > 0),
         assert(minAnimationDuration < maxAnimationDuration),
         assert(maxScale > 1),
         assert(child != null);
@@ -60,15 +62,19 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   KenburnsGenerator _kenburnsGenerator = KenburnsGenerator();
 
   Future<void> _createNextAnimations({double height, double width}) async {
-    final KenBurnsGeneratorConfig nextConfig = _kenburnsGenerator.generateNextConfig(
-        width: width,
-        height: height,
-        maxScale: widget.maxScale,
-        lastScale: _currentScale,
-        scaleDown: _scaleDown,
-        minDurationMillis: widget.minAnimationDuration.inMilliseconds.toDouble(),
-        maxDurationMillis: widget.maxAnimationDuration.inMilliseconds.toDouble(),
-        lastTranslation: Offset(_currentTranslationX, _currentTranslationY));
+    final KenBurnsGeneratorConfig nextConfig =
+        _kenburnsGenerator.generateNextConfig(
+            width: width,
+            height: height,
+            maxScale: widget.maxScale,
+            lastScale: _currentScale,
+            scaleDown: _scaleDown,
+            minDurationMillis:
+                widget.minAnimationDuration.inMilliseconds.toDouble(),
+            maxDurationMillis:
+                widget.maxAnimationDuration.inMilliseconds.toDouble(),
+            lastTranslation:
+                Offset(_currentTranslationX, _currentTranslationY));
 
     _scaleController?.dispose();
     _scaleController = AnimationController(
@@ -76,13 +82,14 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _scaleAnim = Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
+    _scaleAnim =
+        Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentScale = _scaleAnim.value;
-        });
-      });
+            setState(() {
+              _currentScale = _scaleAnim.value;
+            });
+          });
 
     _translationController?.dispose();
     _translationController = AnimationController(
@@ -90,20 +97,24 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _translationXAnim = Tween(begin: this._currentTranslationX, end: nextConfig.newTranslation.dx).animate(
+    _translationXAnim = Tween(
+            begin: this._currentTranslationX, end: nextConfig.newTranslation.dx)
+        .animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentTranslationX = _translationXAnim.value;
-        });
-      });
-    _translationYAnim = Tween(begin: this._currentTranslationY, end: nextConfig.newTranslation.dy).animate(
+            setState(() {
+              _currentTranslationX = _translationXAnim.value;
+            });
+          });
+    _translationYAnim = Tween(
+            begin: this._currentTranslationY, end: nextConfig.newTranslation.dy)
+        .animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentTranslationY = _translationYAnim.value;
-        });
-      });
+            setState(() {
+              _currentTranslationY = _translationYAnim.value;
+            });
+          });
 
     log("kenburns started");
     log("kenburns d(${nextConfig.newDuration}) translation(${nextConfig.newTranslation.dx}, ${nextConfig.newTranslation.dy}) scale(${nextConfig.newScale})");
@@ -145,7 +156,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
         child: Transform.translate(
           offset: Offset(_currentTranslationX, _currentTranslationY),
           child: Transform.scale(
-            scale: 1 + _currentScale,
+            scale: _currentScale,
             child: widget.child,
           ),
         ),
