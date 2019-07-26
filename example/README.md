@@ -12,7 +12,7 @@ Container(
 ),
 ```
 
-[![screen](https://raw.githubusercontent.com/florent37/Flutter-KenBurns/master/medias/shake.gif)](https://www.github.com/florent37/Flutter-KenBurns)
+[![screen](https://raw.githubusercontent.com/florent37/Flutter-KenBurns/master/medias/kenburns_slow.gif)](https://www.github.com/florent37/Flutter-KenBurns)
 
 # Download
 
