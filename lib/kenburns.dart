@@ -1,9 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+
+import 'KenburnsGenerator.dart';
 
 class Kenburns extends StatefulWidget {
   final Widget child;
+
+  final List<Widget> children;
+  final Duration childrenFadeDuration;
 
   final Duration minAnimationDuration;
   final Duration maxAnimationDuration;
@@ -11,16 +14,31 @@ class Kenburns extends StatefulWidget {
 
   Kenburns({
     this.child,
+    this.minAnimationDuration = const Duration(milliseconds: 3000),
+    this.maxAnimationDuration = const Duration(milliseconds: 10000),
+    this.maxScale = 10,
+  })
+      : this.childrenFadeDuration = null,
+        this.children = null;
+
+  /*
+  Kenburns.multiple({
     this.minAnimationDuration = const Duration(milliseconds: 1000),
     this.maxAnimationDuration = const Duration(milliseconds: 10000),
     this.maxScale = 10,
-  });
+    this.children,
+    this.childrenFadeDuration = const Duration(milliseconds: 500)
+  }) : this.child = null;
+  */
 
   @override
   _KenburnsState createState() => _KenburnsState();
 }
 
 class _KenburnsState extends State<Kenburns> with TickerProviderStateMixin {
+
+  bool _running = false;
+
   AnimationController _scaleController;
   Animation<double> _scaleAnim;
 
@@ -34,50 +52,31 @@ class _KenburnsState extends State<Kenburns> with TickerProviderStateMixin {
 
   bool _scaleDown = true;
 
-  Random _random = Random();
+  bool _displayLogs = true;
 
-  bool _displayLogs = false;
-
-  /**
-   * Generates a positive random integer uniformly distributed on the range
-   * from [min], inclusive, to [max], exclusive.
-   */
-  double _randomValue(double min, double max) => min + _random.nextInt((max - min).round());
-
-  double _generateNextScale({double lastScale, bool scaleDown}) {
-    final double minScale = 1.0;
-    final double maxScale = widget.maxScale;
-    if (scaleDown && minScale < lastScale) {
-      return _randomValue(minScale, lastScale);
-    } else {
-      return _randomValue(lastScale, maxScale);
-    }
-  }
-
-  Duration _generateNextDuration() {
-    return Duration(milliseconds: _randomValue(widget.minAnimationDuration.inMilliseconds.toDouble(), widget.maxAnimationDuration.inMilliseconds.toDouble()).floor());
-  }
-
-  Offset _generateNextTranslation({double width, double height}) {
-    final x = _randomValue(-0.9 * width, 0.9 * width);
-    final y = _randomValue(-0.9 * height, 0.9 * height);
-    return Offset(x, y);
-  }
+  KenburnsGenerator _kenburnsGenerator = KenburnsGenerator();
 
   Future<void> _createNextAnimations({double height, double width}) async {
-    final Duration duration = _generateNextDuration();
+    final KenburnsGeneratorConfig nextConfig = _kenburnsGenerator.generateNextConfig(width: width,
+        height: height,
+        maxScale: widget.maxScale,
+        lastScale: _currentScale,
+        scaleDown: _scaleDown,
+        minDurationMillis: widget.minAnimationDuration.inMilliseconds.toDouble(),
+        maxDurationMillis: widget.maxAnimationDuration.inMilliseconds.toDouble(),
+        lastTranslation: Offset(_currentTranslationX, _currentTranslationY)
+    );
 
     _scaleController?.dispose();
     _scaleController = AnimationController(
-      duration: duration,
+      duration: nextConfig.newDuration,
       vsync: this,
     );
 
-    final newScale = _generateNextScale(lastScale: _currentScale, scaleDown: _scaleDown);
-
-    _scaleAnim = Tween(begin: this._currentScale, end: newScale).animate(
+    _scaleAnim = Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.linear),
-    )..addListener(() {
+    )
+      ..addListener(() {
         setState(() {
           _currentScale = _scaleAnim.value;
         });
@@ -85,29 +84,29 @@ class _KenburnsState extends State<Kenburns> with TickerProviderStateMixin {
 
     _translationController?.dispose();
     _translationController = AnimationController(
-      duration: duration,
+      duration: nextConfig.newDuration,
       vsync: this,
     );
 
-    final Offset translation = _generateNextTranslation(width: width, height: height);
-
-    _translationXAnim = Tween(begin: this._currentTranslationX, end: translation.dx).animate(
+    _translationXAnim = Tween(begin: this._currentTranslationX, end: nextConfig.newTranslation.dx).animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
-    )..addListener(() {
+    )
+      ..addListener(() {
         setState(() {
           _currentTranslationX = _translationXAnim.value;
         });
       });
-    _translationYAnim = Tween(begin: this._currentTranslationY, end: translation.dy).animate(
+    _translationYAnim = Tween(begin: this._currentTranslationY, end: nextConfig.newTranslation.dy).animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
-    )..addListener(() {
+    )
+      ..addListener(() {
         setState(() {
           _currentTranslationY = _translationYAnim.value;
         });
       });
 
     log("kenburns started");
-    log("kenburns d($duration) translation(${translation.dx}, ${translation.dy}) scale($newScale)");
+    log("kenburns d(${nextConfig.newDuration}) translation(${nextConfig.newTranslation.dx}, ${nextConfig.newTranslation.dy}) scale(${nextConfig.newScale})");
 
     _scaleDown = !_scaleDown;
 
@@ -117,13 +116,11 @@ class _KenburnsState extends State<Kenburns> with TickerProviderStateMixin {
     log("kenburns finished");
   }
 
-  void log(String text){
-    if(_displayLogs){
+  void log(String text) {
+    if (_displayLogs) {
       print(text);
     }
   }
-
-  bool _running = false;
 
   void fire({double height, double width}) async {
     _running = true;
