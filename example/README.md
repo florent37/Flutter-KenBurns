@@ -1,16 +1,30 @@
-# kenburns_example
+# kenburns example
 
-Demonstrates how to use the kenburns plugin.
+The Ken Burns effect is a type of panning and zooming effect used in video production from still imagery.
 
-## Getting Started
+Wrap your image with a KenBurns widget
+```dart
+Container(
+      height: 300,
+      child: KenBurns(
+        child: Image.network("https://lemag.nikonclub.fr/wp-content/uploads/2017/07/08.jpg", fit: BoxFit.cover,),
+      ),
+),
+```
 
-This project is a starting point for a Flutter application.
+[![screen](https://raw.githubusercontent.com/florent37/Flutter-KenBurns/master/medias/shake.gif)](https://www.github.com/florent37/Flutter-KenBurns)
 
-A few resources to get you started if this is your first Flutter project:
+# Download
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+https://pub.dev/packages/kenburns
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
+```
+dependencies:
+  kenburns: 
+```
+
+## Getting Started with Flutter
+
+For help getting started with Flutter, view our 
+[online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
