@@ -43,8 +43,10 @@ class KenBurns extends StatefulWidget {
   })  : this.childrenFadeDuration = null,
         this.children = null,
         this.childLoop = null,
-        assert(minAnimationDuration != null && minAnimationDuration.inMilliseconds > 0),
-        assert(maxAnimationDuration != null && maxAnimationDuration.inMilliseconds > 0),
+        assert(minAnimationDuration != null &&
+            minAnimationDuration.inMilliseconds > 0),
+        assert(maxAnimationDuration != null &&
+            maxAnimationDuration.inMilliseconds > 0),
         assert(minAnimationDuration < maxAnimationDuration),
         assert(maxScale > 1),
         assert(child != null);
@@ -107,11 +109,11 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   //region multiple childs
   /// if true : the widget setup is multipleImages
-  bool get displayMultipleImage => widget.children != null && widget.children.length > 1;
+  bool get displayMultipleImage =>
+      widget.children != null && widget.children.length > 1;
   int nextChildIndex = -1;
   int currentChildIndex = 0;
   int currentChildLoop = 0;
-
 
   double _opacityCurrentChild = 1;
   double _opacityNextChild = 0;
@@ -153,15 +155,19 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   /// Generate the next animation [scale, duration, translation]
   /// Using the [KenBurnsGenerator] generateNextConfig
   Future<void> _createNextAnimations({double height, double width}) async {
-    final KenBurnsGeneratorConfig nextConfig = _kenburnsGenerator.generateNextConfig(
-        width: width,
-        height: height,
-        maxScale: widget.maxScale,
-        lastScale: _currentScale,
-        scaleDown: _scaleDown,
-        minDurationMillis: widget.minAnimationDuration.inMilliseconds.toDouble(),
-        maxDurationMillis: widget.maxAnimationDuration.inMilliseconds.toDouble(),
-        lastTranslation: Offset(_currentTranslationX, _currentTranslationY));
+    final KenBurnsGeneratorConfig nextConfig =
+        _kenburnsGenerator.generateNextConfig(
+            width: width,
+            height: height,
+            maxScale: widget.maxScale,
+            lastScale: _currentScale,
+            scaleDown: _scaleDown,
+            minDurationMillis:
+                widget.minAnimationDuration.inMilliseconds.toDouble(),
+            maxDurationMillis:
+                widget.maxAnimationDuration.inMilliseconds.toDouble(),
+            lastTranslation:
+                Offset(_currentTranslationX, _currentTranslationY));
 
     /// Recreate the scale animations
     _scaleController?.dispose();
@@ -170,13 +176,14 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _scaleAnim = Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
+    _scaleAnim =
+        Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentScale = _scaleAnim.value;
-        });
-      });
+            setState(() {
+              _currentScale = _scaleAnim.value;
+            });
+          });
 
     /// Recreate the translations animations
     _translationController?.dispose();
@@ -185,20 +192,24 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _translationXAnim = Tween(begin: this._currentTranslationX, end: nextConfig.newTranslation.dx).animate(
+    _translationXAnim = Tween(
+            begin: this._currentTranslationX, end: nextConfig.newTranslation.dx)
+        .animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentTranslationX = _translationXAnim.value;
-        });
-      });
-    _translationYAnim = Tween(begin: this._currentTranslationY, end: nextConfig.newTranslation.dy).animate(
+            setState(() {
+              _currentTranslationX = _translationXAnim.value;
+            });
+          });
+    _translationYAnim = Tween(
+            begin: this._currentTranslationY, end: nextConfig.newTranslation.dy)
+        .animate(
       CurvedAnimation(parent: _translationController, curve: Curves.linear),
     )..addListener(() {
-        setState(() {
-          _currentTranslationY = _translationYAnim.value;
-        });
-      });
+            setState(() {
+              _currentTranslationY = _translationYAnim.value;
+            });
+          });
 
     log("kenburns started");
     log("kenburns d(${nextConfig.newDuration}) translation(${nextConfig.newTranslation.dx}, ${nextConfig.newTranslation.dy}) scale(${nextConfig.newScale})");
@@ -222,7 +233,6 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   /// Fire the fade (in/out) animation
   Future<void> _fade() async {
-
     await _fadeController.forward();
 
     setState(() {
@@ -230,7 +240,6 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
       nextChildIndex = currentChildIndex + 1;
       nextChildIndex = nextChildIndex % widget.children.length;
-
     });
 
     _fadeController.reset();
@@ -239,7 +248,6 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   Future<void> fire({double height, double width}) async {
     _running = true;
     if (displayMultipleImage) {
-
       nextChildIndex = 1;
 
       /// Create one time the fade animation
@@ -298,8 +306,11 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       /// -> we animate to display the next child
       /// We use the stack to keep the same structure as multiple/single child
       return Stack(fit: StackFit.expand, children: <Widget>[
-        Opacity(opacity: _opacityCurrentChild, child: widget.children[currentChildIndex]),
-        Opacity(opacity: _opacityNextChild, child: widget.children[nextChildIndex]),
+        Opacity(
+            opacity: _opacityCurrentChild,
+            child: widget.children[currentChildIndex]),
+        Opacity(
+            opacity: _opacityNextChild, child: widget.children[nextChildIndex]),
       ]);
     } else {
       /// If we have only 1 child
