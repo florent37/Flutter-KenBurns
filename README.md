@@ -44,7 +44,7 @@ samples, guidance on mobile development, and a full API reference.
 
 # License
 
-    Copyright 20189 florent37, Inc.
+    Copyright 2019 florent37, Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
