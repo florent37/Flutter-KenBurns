@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
+/// The generated configuration of KenBurns (scale, translation, duration)
 class KenBurnsGeneratorConfig {
   double newScale;
   Offset newTranslation;
@@ -15,6 +16,7 @@ class KenBurnsGeneratorConfig {
   });
 }
 
+/// The random scale, translation, duration generator
 class KenburnsGenerator {
   Random _random = Random();
 
