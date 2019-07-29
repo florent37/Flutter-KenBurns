@@ -36,10 +36,11 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
               ),
-              */
-              Container(
+              */Container(
                 height: 300,
                 child: KenBurns.multiple(
+                  maxAnimationDuration: Duration(milliseconds: 2000),
+                  minAnimationDuration: Duration(milliseconds: 1000),
                   children: <Widget>[
                     Image.network(
                       "https://www.photo-paysage.com/?file=pic_download_link/picture&pid=3100",

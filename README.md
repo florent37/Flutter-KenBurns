@@ -27,6 +27,33 @@ KenBurns(
   });
 ```
 
+# Multiple images
+
+You can display multiple child in KenBurns with a CrossFade animation
+
+```dart
+Container(
+    height: 300,
+    child: KenBurns.multiple(
+      childLoop: 3,
+      children: [
+        Image.network(
+          "https://www.photo-paysage.com/?file=pic_download_link/picture&pid=3100",
+          fit: BoxFit.cover,
+        ),
+        Image.network(
+          "https://cdn.getyourguide.com/img/location_img-59-1969619245-148.jpg",
+          fit: BoxFit.cover,
+        ),
+        Image.network(
+          "https://www.theglobeandmail.com/resizer/vq3O7LI3hvsjTP2N0m9NwU4W3Eg=/1500x0/filters:quality(80)/arc-anglerfish-tgam-prod-tgam.s3.amazonaws.com/public/4ETF3GZR3NA3RDDW23XDRBKKCI",
+          fit: BoxFit.cover,
+        ),
+      ],
+    ),
+),
+```
+
 # Download
 
 https://pub.dev/packages/kenburns
