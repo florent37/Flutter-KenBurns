@@ -9,9 +9,6 @@
 .history
 .svn/
 
-.packages
-.pub/
-
 build/
 
 
