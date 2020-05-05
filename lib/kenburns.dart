@@ -218,8 +218,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _scaleDown = !_scaleDown;
 
     /// fire scale & translation animations
-    await _scaleController.forward();
-    await _translationController.forward();
+    await Future.wait([_scaleController.forward(), _translationController.forward()]);
 
     log("kenburns finished");
   }
@@ -330,6 +329,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _running = false;
     _scaleController?.dispose();
     _translationController?.dispose();
+    _fadeController?.dispose();
     super.dispose();
   }
 }
