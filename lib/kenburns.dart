@@ -102,7 +102,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   bool _scaleDown = true;
 
   /// For developpers : set to true to enable logs
-  bool _displayLogs = true;
+  bool _displayLogs = false;
 
   /// The random [scale/duration/translation] generator
   KenburnsGenerator _kenburnsGenerator = KenburnsGenerator();
@@ -218,7 +218,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _scaleDown = !_scaleDown;
 
     /// fire scale & translation animations
-    await Future.wait([_scaleController.forward(), _translationController.forward()]);
+    await Future.wait(
+        [_scaleController.forward(), _translationController.forward()]);
 
     log("kenburns finished");
   }
