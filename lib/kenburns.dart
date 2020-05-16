@@ -28,7 +28,7 @@ class KenBurns extends StatefulWidget {
   final Duration childrenFadeDuration;
 
   /// If specified (using the constructor multiple)
-  /// Will determine thow many times each child will stay in the KenBurns
+  /// Will determine how many times each child will stay in the KenBurns
   /// Until the next child will be displayed
   final int childLoop;
 
@@ -255,10 +255,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
       /// Cancel if _running go to false
       while (_running) {
+        await _createNextAnimations(width: width, height: height);
         if (currentChildLoop % widget.childLoop == 0) {
           _fade(); //parallel
         }
-        await _createNextAnimations(width: width, height: height);
         currentChildLoop++;
       }
     } else {
