@@ -1,7 +1,7 @@
 name: kenburns
 description: Kenburns effect on flutter. The Ken Burns effect is a type of panning and zooming effect used in video production from still imagery.
-version: 1.0.2
-author: Florent Champigny <champigny.florent@gmail.com>
+version: 1.0.3
+#author: Florent Champigny <champigny.florent@gmail.com>
 homepage: https://github.com/florent37/Flutter-KenBurns
 
 environment:

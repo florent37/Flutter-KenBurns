@@ -56,18 +56,13 @@ Container(
 
 # Download
 
-https://pub.dev/packages/kenburns
+[![pub package](https://img.shields.io/pub/v/kenburns.svg)](
+https://pub.dartlang.org/packages/kenburns)
 
 ```
 dependencies:
-  kenburns: 
+  kenburns: ^1.0.3
 ```
-
-## Getting Started with Flutter
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
 
 # License
 
