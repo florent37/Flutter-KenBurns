@@ -45,13 +45,11 @@ class KenburnsGenerator {
 
   Offset generateNextTranslation(
       {double width, double height, Size nextSize, double nextScale}) {
-    double minX = -1 * (nextSize.width / 2 - width) / nextScale;
-    double maxX = 1;
-    double minY = -1 * (nextSize.height / 2 - height) / nextScale;
-    double maxY = 1;
+    final availableXOffset = ((nextSize.width - width) / 2);
+    final availableYOffset = ((nextSize.height - height) / 2);
 
-    final x = _randomValue(minX, maxX);
-    final y = _randomValue(minY, maxY);
+    final x = _randomValue(-1 * availableXOffset, availableXOffset);
+    final y = _randomValue(-1 * availableYOffset, availableYOffset);
     return Offset(x, y);
   }
 
@@ -69,28 +67,25 @@ class KenburnsGenerator {
     double nextScale;
     Offset nextTranslation;
 
-    do {
-      nextDuration = generateNextDuration(
-        minDurationMillis: minDurationMillis,
-        maxDurationMillis: maxDurationMillis,
-      );
+    nextDuration = generateNextDuration(
+      minDurationMillis: minDurationMillis,
+      maxDurationMillis: maxDurationMillis,
+    );
 
-      nextScale = generateNextScale(
-        lastScale: lastScale,
-        maxScale: maxScale,
-        scaleDown: scaleDown,
-      );
+    nextScale = generateNextScale(
+      lastScale: lastScale,
+      maxScale: maxScale,
+      scaleDown: scaleDown,
+    );
 
-      Size nextSize = Size(width * nextScale, height * nextScale);
+    Size nextSize = Size(width * nextScale, height * nextScale);
 
-      nextTranslation = generateNextTranslation(
-        width: width,
-        height: height,
-        nextScale: nextScale,
-        nextSize: nextSize,
-      );
-    } while ((nextTranslation.dy - lastTranslation.dy).abs() < height * 0.1 &&
-        (nextTranslation.dx - lastTranslation.dx).abs() < width * 0.1);
+    nextTranslation = generateNextTranslation(
+      width: width,
+      height: height,
+      nextScale: nextScale,
+      nextSize: nextSize,
+    );
 
     return KenBurnsGeneratorConfig(
       newDuration: nextDuration,

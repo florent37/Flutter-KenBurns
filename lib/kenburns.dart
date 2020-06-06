@@ -28,7 +28,7 @@ class KenBurns extends StatefulWidget {
   final Duration childrenFadeDuration;
 
   /// If specified (using the constructor multiple)
-  /// Will determine thow many times each child will stay in the KenBurns
+  /// Will determine how many times each child will stay in the KenBurns
   /// Until the next child will be displayed
   final int childLoop;
 
@@ -102,7 +102,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   bool _scaleDown = true;
 
   /// For developpers : set to true to enable logs
-  bool _displayLogs = true;
+  bool _displayLogs = false;
 
   /// The random [scale/duration/translation] generator
   KenburnsGenerator _kenburnsGenerator = KenburnsGenerator();
@@ -218,8 +218,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _scaleDown = !_scaleDown;
 
     /// fire scale & translation animations
-    await _scaleController.forward();
-    await _translationController.forward();
+    await Future.wait(
+        [_scaleController.forward(), _translationController.forward()]);
 
     log("kenburns finished");
   }
@@ -255,10 +255,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
       /// Cancel if _running go to false
       while (_running) {
+        await _createNextAnimations(width: width, height: height);
         if (currentChildLoop % widget.childLoop == 0) {
           _fade(); //parallel
         }
-        await _createNextAnimations(width: width, height: height);
         currentChildLoop++;
       }
     } else {
@@ -330,6 +330,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _running = false;
     _scaleController?.dispose();
     _translationController?.dispose();
+    _fadeController?.dispose();
     super.dispose();
   }
 }
