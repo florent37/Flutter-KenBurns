@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
                   minAnimationDuration: Duration(seconds: 3),
                   children: <Widget>[
                     Image.network(
-                      "https://www.photo-paysage.com/?file=pic_download_link/picture&pid=3100",
+                      "https://cdn.hasselblad.com/hasselblad-com/6cb604081ef3086569319ddb5adcae66298a28c5_x1d-ii-sample-01-web.jpg?auto=format&q=97",
                       fit: BoxFit.cover,
                     ),
                     Image.network(
