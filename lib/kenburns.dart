@@ -235,6 +235,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   Future<void> _fade() async {
     await _fadeController.forward();
 
+    if (!_running) return;
+
     setState(() {
       currentChildIndex = nextChildIndex;
 
@@ -256,6 +258,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       /// Cancel if _running go to false
       while (_running) {
         await _createNextAnimations(width: width, height: height);
+        if (!_running) return;
+
         if (currentChildLoop % widget.childLoop == 0) {
           _fade(); //parallel
         }
@@ -274,6 +278,21 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     /// Reset _runnint state
     _running = false;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(KenBurns oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldDisplayMultipleImage =
+        oldWidget.children != null && oldWidget.children.length > 1;
+
+    if (oldDisplayMultipleImage != displayMultipleImage) {
+      _running = false;
+      _scaleController?.dispose();
+      _fadeController?.dispose();
+      _translationController?.dispose();
+    }
   }
 
   @override
