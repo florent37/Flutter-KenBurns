@@ -134,6 +134,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _fadeController?.dispose();
     _fadeController = AnimationController(
       duration: widget.childrenFadeDuration,
+      vsync: this,
     );
     _fadeInAnim = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.linear),
@@ -172,6 +173,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _scaleController?.dispose();
     _scaleController = AnimationController(
       duration: nextConfig.newDuration,
+      vsync: this,
     );
 
     _scaleAnim =
@@ -187,6 +189,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _translationController?.dispose();
     _translationController = AnimationController(
       duration: nextConfig.newDuration,
+      vsync: this,
     );
 
     _translationXAnim = Tween(
