@@ -109,11 +109,11 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   //region multiple childs
   /// if true : the widget setup is multipleImages
-  bool get displayMultipleImage =>
+  bool get _displayMultipleImage =>
       widget.children != null && widget.children.length > 1;
-  int nextChildIndex = -1;
-  int currentChildIndex = 0;
-  int currentChildLoop = 0;
+  int _nextChildIndex = -1;
+  int _currentChildIndex = 0;
+  int _currentChildLoop = 0;
 
   double _opacityCurrentChild = 1;
   double _opacityNextChild = 0;
@@ -238,10 +238,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     if (!_running) return;
 
     setState(() {
-      currentChildIndex = nextChildIndex;
+      _currentChildIndex = _nextChildIndex;
 
-      nextChildIndex = currentChildIndex + 1;
-      nextChildIndex = nextChildIndex % widget.children.length;
+      _nextChildIndex = _currentChildIndex + 1;
+      _nextChildIndex = _nextChildIndex % widget.children.length;
     });
 
     _fadeController.reset();
@@ -249,8 +249,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   Future<void> fire({double height, double width}) async {
     _running = true;
-    if (displayMultipleImage) {
-      nextChildIndex = 1;
+    if (_displayMultipleImage) {
+      _nextChildIndex = 1;
 
       /// Create one time the fade animation
       await _createFadeAnimations();
@@ -260,10 +260,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
         await _createNextAnimations(width: width, height: height);
         if (!_running) return;
 
-        if (currentChildLoop % widget.childLoop == 0) {
+        if (_currentChildLoop % widget.childLoop == 0) {
           _fade(); //parallel
         }
-        currentChildLoop++;
+        _currentChildLoop++;
       }
     } else {
       /// Cancel if _running go to false
@@ -284,14 +284,12 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   void didUpdateWidget(KenBurns oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final oldDisplayMultipleImage =
-        oldWidget.children != null && oldWidget.children.length > 1;
-
-    if (oldDisplayMultipleImage != displayMultipleImage) {
+    if (oldWidget.children?.length != oldWidget.children?.length) {
       _running = false;
       _scaleController?.dispose();
       _fadeController?.dispose();
       _translationController?.dispose();
+      _currentChildIndex = 0;
     }
   }
 
@@ -320,16 +318,17 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   }
 
   Widget _buildChild() {
-    if (displayMultipleImage) {
+    if (_displayMultipleImage) {
       /// If the [currentChildIndex] changed (different than [lastChildIndex])
       /// -> we animate to display the next child
       /// We use the stack to keep the same structure as multiple/single child
       return Stack(fit: StackFit.expand, children: <Widget>[
         Opacity(
             opacity: _opacityCurrentChild,
-            child: widget.children[currentChildIndex]),
+            child: widget.children[_currentChildIndex]),
         Opacity(
-            opacity: _opacityNextChild, child: widget.children[nextChildIndex]),
+            opacity: _opacityNextChild,
+            child: widget.children[_nextChildIndex]),
       ]);
     } else {
       /// If we have only 1 child
