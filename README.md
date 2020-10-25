@@ -61,7 +61,7 @@ https://pub.dartlang.org/packages/kenburns)
 
 ```
 dependencies:
-  kenburns: ^1.0.4
+  kenburns: ^1.0.5
 ```
 
 # License
