@@ -5,7 +5,7 @@ version: 1.0.5
 homepage: https://github.com/florent37/Flutter-KenBurns
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
