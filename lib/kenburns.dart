@@ -5,7 +5,7 @@ import 'KenburnsGenerator.dart';
 /// KenBurns widget, please provide a `child` Widget,
 /// Will animate the child, using random scale, translation & duration
 class KenBurns extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
   /// minimum translation & scale duration, not null
   final Duration minAnimationDuration;
@@ -21,35 +21,32 @@ class KenBurns extends StatefulWidget {
   /// Will animate [childLoop] each children then will fade to the next child
   /// Not Null & Size must be > 1
   /// if size == 1 -> Will use the KenBurns as a single child
-  final List<Widget> children;
+  final List<Widget>? children;
 
   /// If specified (using the constructor multiple)
   /// Will specify the fade in duration between 2 child
-  final Duration childrenFadeDuration;
+  final Duration? childrenFadeDuration;
 
   /// If specified (using the constructor multiple)
   /// Will determine how many times each child will stay in the KenBurns
   /// Until the next child will be displayed
-  final int childLoop;
+  final int? childLoop;
 
   //endregion
 
   /// Constructor for a single child KenBurns
   KenBurns({
-    @required this.child,
+    required Widget this.child,
     this.minAnimationDuration = const Duration(milliseconds: 3000),
     this.maxAnimationDuration = const Duration(milliseconds: 10000),
     this.maxScale = 8,
   })  : this.childrenFadeDuration = null,
         this.children = null,
         this.childLoop = null,
-        assert(minAnimationDuration != null &&
-            minAnimationDuration.inMilliseconds > 0),
-        assert(maxAnimationDuration != null &&
-            maxAnimationDuration.inMilliseconds > 0),
+        assert(minAnimationDuration.inMilliseconds > 0),
+        assert(maxAnimationDuration.inMilliseconds > 0),
         assert(minAnimationDuration < maxAnimationDuration),
-        assert(maxScale > 1),
-        assert(child != null);
+        assert(maxScale > 1);
 
   /// Constructor for multiple child KenBurns
   KenBurns.multiple(
@@ -70,23 +67,23 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   /// The generated scale controller
   /// Will be destroyed / created at each loop (because duration is different)
-  AnimationController _scaleController;
+  AnimationController? _scaleController;
 
   /// The generated scale controller's animation
   /// Will be destroyed / created at each loop (because duration is different)
-  Animation<double> _scaleAnim;
+  late Animation<double> _scaleAnim;
 
   /// The generated translation controller
   /// Will be destroyed / created at each loop (because duration is different)
-  AnimationController _translationController;
+  AnimationController? _translationController;
 
   /// The generated translation controller's X animation
   /// Will be destroyed / created at each loop (because duration is different)
-  Animation<double> _translationXAnim;
+  late Animation<double> _translationXAnim;
 
   /// The generated translation controller's Y animation
   /// Will be destroyed / created at each loop (because duration is different)
-  Animation<double> _translationYAnim;
+  late Animation<double> _translationYAnim;
 
   /// The animated current scale
   double _currentScale = 1;
@@ -110,7 +107,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   //region multiple childs
   /// if true : the widget setup is multipleImages
   bool get _displayMultipleImage =>
-      widget.children != null && widget.children.length > 1;
+      widget.children != null && widget.children!.length > 1;
   int _nextChildIndex = -1;
   int _currentChildIndex = 0;
   int _currentChildLoop = 0;
@@ -119,13 +116,13 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
   double _opacityNextChild = 0;
 
   /// The generated fade controller
-  AnimationController _fadeController;
+  AnimationController? _fadeController;
 
   /// The generated opacity fade in controller's animation
-  Animation<double> _fadeInAnim;
+  late Animation<double> _fadeInAnim;
 
   /// The generated opacity fade out controller's animation
-  Animation<double> _fadeOutAnim;
+  late Animation<double> _fadeOutAnim;
 
   //endregion
 
@@ -137,14 +134,14 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       vsync: this,
     );
     _fadeInAnim = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.linear),
+      CurvedAnimation(parent: _fadeController!, curve: Curves.linear),
     )..addListener(() {
         setState(() {
           _opacityNextChild = _fadeInAnim.value;
         });
       });
     _fadeOutAnim = Tween(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.linear),
+      CurvedAnimation(parent: _fadeController!, curve: Curves.linear),
     )..addListener(() {
         setState(() {
           _opacityCurrentChild = _fadeOutAnim.value;
@@ -154,7 +151,8 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   /// Generate the next animation [scale, duration, translation]
   /// Using the [KenBurnsGenerator] generateNextConfig
-  Future<void> _createNextAnimations({double height, double width}) async {
+  Future<void> _createNextAnimations(
+      {required double height, required double width}) async {
     final KenBurnsGeneratorConfig nextConfig =
         _kenburnsGenerator.generateNextConfig(
             width: width,
@@ -178,7 +176,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
     _scaleAnim =
         Tween(begin: this._currentScale, end: nextConfig.newScale).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.linear),
+      CurvedAnimation(parent: _scaleController!, curve: Curves.linear),
     )..addListener(() {
             setState(() {
               _currentScale = _scaleAnim.value;
@@ -195,7 +193,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _translationXAnim = Tween(
             begin: this._currentTranslationX, end: nextConfig.newTranslation.dx)
         .animate(
-      CurvedAnimation(parent: _translationController, curve: Curves.linear),
+      CurvedAnimation(parent: _translationController!, curve: Curves.linear),
     )..addListener(() {
             setState(() {
               _currentTranslationX = _translationXAnim.value;
@@ -204,7 +202,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     _translationYAnim = Tween(
             begin: this._currentTranslationY, end: nextConfig.newTranslation.dy)
         .animate(
-      CurvedAnimation(parent: _translationController, curve: Curves.linear),
+      CurvedAnimation(parent: _translationController!, curve: Curves.linear),
     )..addListener(() {
             setState(() {
               _currentTranslationY = _translationYAnim.value;
@@ -219,7 +217,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
     /// fire scale & translation animations
     await Future.wait(
-        [_scaleController.forward(), _translationController.forward()]);
+        [_scaleController!.forward(), _translationController!.forward()]);
 
     log("kenburns finished");
   }
@@ -233,7 +231,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
   /// Fire the fade (in/out) animation
   Future<void> _fade() async {
-    await _fadeController.forward();
+    await _fadeController!.forward();
 
     if (!_running) return;
 
@@ -241,13 +239,13 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       _currentChildIndex = _nextChildIndex;
 
       _nextChildIndex = _currentChildIndex + 1;
-      _nextChildIndex = _nextChildIndex % widget.children.length;
+      _nextChildIndex = _nextChildIndex % widget.children!.length;
     });
 
-    _fadeController.reset();
+    _fadeController!.reset();
   }
 
-  Future<void> fire({double height, double width}) async {
+  Future<void> fire({double? height, double? width}) async {
     _running = true;
     if (_displayMultipleImage) {
       _nextChildIndex = 1;
@@ -257,10 +255,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
 
       /// Cancel if _running go to false
       while (_running) {
-        await _createNextAnimations(width: width, height: height);
+        await _createNextAnimations(width: width!, height: height!);
         if (!_running) return;
 
-        if (_currentChildLoop % widget.childLoop == 0) {
+        if (_currentChildLoop % widget.childLoop! == 0) {
           _fade(); //parallel
         }
         _currentChildLoop++;
@@ -268,7 +266,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
     } else {
       /// Cancel if _running go to false
       while (_running) {
-        await _createNextAnimations(width: width, height: height);
+        await _createNextAnimations(width: width!, height: height!);
       }
     }
   }
@@ -325,10 +323,10 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       return Stack(fit: StackFit.expand, children: <Widget>[
         Opacity(
             opacity: _opacityCurrentChild,
-            child: widget.children[_currentChildIndex]),
+            child: widget.children![_currentChildIndex]),
         Opacity(
             opacity: _opacityNextChild,
-            child: widget.children[_nextChildIndex]),
+            child: widget.children![_nextChildIndex]),
       ]);
     } else {
       /// If we have only 1 child
@@ -336,7 +334,7 @@ class _KenBurnsState extends State<KenBurns> with TickerProviderStateMixin {
       return Stack(
         fit: StackFit.expand,
         children: [
-          widget.child,
+          widget.child!,
         ],
       );
     }

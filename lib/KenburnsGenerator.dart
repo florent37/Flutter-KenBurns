@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-
 /// The generated configuration of KenBurns (scale, translation, duration)
 class KenBurnsGeneratorConfig {
   double newScale;
@@ -10,9 +8,9 @@ class KenBurnsGeneratorConfig {
   Duration newDuration;
 
   KenBurnsGeneratorConfig({
-    @required this.newScale,
-    @required this.newTranslation,
-    @required this.newDuration,
+    required this.newScale,
+    required this.newTranslation,
+    required this.newDuration,
   });
 }
 
@@ -27,24 +25,27 @@ class KenburnsGenerator {
       min + _random.nextDouble() * (max - min);
 
   double generateNextScale(
-      {double lastScale, double maxScale, bool scaleDown}) {
+      {double? lastScale, double? maxScale, required bool scaleDown}) {
     final double minScale = 1.0;
-    if (scaleDown && minScale < lastScale) {
+    if (scaleDown && minScale < lastScale!) {
       return _randomValue(minScale, lastScale);
     } else {
-      return _randomValue(max(minScale, lastScale), maxScale);
+      return _randomValue(max(minScale, lastScale!), maxScale!);
     }
   }
 
   Duration generateNextDuration(
-      {double minDurationMillis, double maxDurationMillis}) {
+      {required double minDurationMillis, required double maxDurationMillis}) {
     return Duration(
         milliseconds:
             _randomValue(minDurationMillis, maxDurationMillis).floor());
   }
 
   Offset generateNextTranslation(
-      {double width, double height, Size nextSize, double nextScale}) {
+      {required double width,
+      required double height,
+      required Size nextSize,
+      double? nextScale}) {
     final availableXOffset = ((nextSize.width - width) / 2);
     final availableYOffset = ((nextSize.height - height) / 2);
 
@@ -54,14 +55,14 @@ class KenburnsGenerator {
   }
 
   KenBurnsGeneratorConfig generateNextConfig({
-    double width,
-    double height,
-    double maxScale,
-    double lastScale,
-    bool scaleDown,
-    double minDurationMillis,
-    double maxDurationMillis,
-    Offset lastTranslation,
+    required double width,
+    required double height,
+    double? maxScale,
+    double? lastScale,
+    required bool scaleDown,
+    required double minDurationMillis,
+    required double maxDurationMillis,
+    Offset? lastTranslation,
   }) {
     Duration nextDuration;
     double nextScale;
